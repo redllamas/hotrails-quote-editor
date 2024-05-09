@@ -1,1 +1,0 @@
-# hotrails-quote-editor
