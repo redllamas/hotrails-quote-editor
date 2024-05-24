@@ -1,0 +1,4 @@
+<%# app/views/line_items/create.turbo_stream.erb %>
+
+<%= turbo_stream.update LineItem.new, "" %>
+<%= turbo_stream.append "line_items", @line_item %>
