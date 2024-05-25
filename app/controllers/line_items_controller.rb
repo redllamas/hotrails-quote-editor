@@ -2,7 +2,7 @@
 class LineItemsController < ApplicationController
   before_action :set_quote
   before_action :set_line_item_date
-  before_action :set_line_item, only: %i[edit update destroy]
+  before_action :set_line_item, only: [:edit, :update, :destroy]
 
   def new
     @line_item = @line_item_date.line_items.build
@@ -12,7 +12,10 @@ class LineItemsController < ApplicationController
     @line_item = @line_item_date.line_items.build(line_item_params)
 
     if @line_item.save
-      redirect_to quote_path(@quote), notice: 'Item was successfully created.'
+      respond_to do |format|
+        format.html { redirect_to quote_path(@quote), notice: 'Item was successfully created.' }
+        format.turbo_stream { flash.now[:notice] = 'Item was successfully created.' }
+      end
     else
       render :new, status: :unprocessable_entity
     end
@@ -23,12 +26,18 @@ class LineItemsController < ApplicationController
   def destroy
     @line_item.destroy
 
-    redirect_to quote_path(@quote), notice: 'Item was successfully destroyed.'
+    respond_to do |format|
+      format.html { redirect_to quote_path(@quote), notice: "Date was successfully destroyed." }
+      format.turbo_stream { flash.now[:notice] = "Date was successfully destroyed." }
+    end
   end
 
   def update
     if @line_item.update(line_item_params)
-      redirect_to quote_path(@quote), notice: 'Item was successfully updated.'
+      respond_to do |format|
+        format.html { redirect_to quote_path(@quote), notice: "Item was successfully updated." }
+        format.turbo_stream { flash.now[:notice] = "Item was successfully updated." }
+      end
     else
       render :edit, status: :unprocessable_entity
     end
